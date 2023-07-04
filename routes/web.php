@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('companies', App\Http\Controllers\CompanyController::class)->middleware('isAdmin');
+    Route::resource('companies.users', App\Http\Controllers\CompanyUserController::class)->except('show');
 });
 
 require __DIR__.'/auth.php';
