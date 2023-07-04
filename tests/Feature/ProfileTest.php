@@ -83,6 +83,8 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
 
+        logger($user);
+
         $response = $this
             ->actingAs($user)
             ->from('/profile')
