@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies.activities', App\Http\Controllers\CompanyActivityController::class);
 
     Route::get('/activities', [App\Http\Controllers\MyActivityController::class, 'show'])->name('my-activity.show');
+    Route::get('/guides/activities', [App\Http\Controllers\GuideActivityController::class, 'show'])->name('guide-activity.show');
     Route::delete('/activities/{activity}', [App\Http\Controllers\MyActivityController::class, 'destroy'])->name('my-activity.destroy');
 });
 
