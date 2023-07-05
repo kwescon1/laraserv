@@ -7,12 +7,19 @@ use App\Models\Activity;
 use App\Models\Company;
 use App\Models\Enums\RoleEnum;
 use App\Models\User;
+use App\Services\Image\UploadImageService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CompanyActivityController extends Controller
 {
+    private $uploadImageService;
+
+    public function __construct(UploadImageService $uploadImageService)
+    {
+        $this->uploadImageService = $uploadImageService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -46,14 +53,15 @@ class CompanyActivityController extends Controller
     {
         $this->authorize('create', $company);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('activities', 'public');
-        }
+        $filename = $this->uploadImageService->uploadImage($request);
 
-        Activity::create($request->validated() + [
+        $activity = Activity::create($request->validated() + [
             'company_id' => $company->id,
             'photo' => $path ?? null,
+            'photo' => $filename,
         ]);
+
+        $activity->participants()->sync($request->input('guides'));
 
         return to_route('companies.activities.index', $company);
     }
@@ -79,15 +87,10 @@ class CompanyActivityController extends Controller
     {
         $this->authorize('update', $company);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('activities', 'public');
-            if ($activity->photo) {
-                Storage::disk('public')->delete($activity->photo);
-            }
-        }
+        $filename = $this->uploadImageService->uploadImage($request);
 
         $activity->update($request->validated() + [
-            'photo' => $path ?? $activity->photo,
+            'photo' => $filename ?? $activity->photo,
         ]);
 
         return to_route('companies.activities.index', $company);
