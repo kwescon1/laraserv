@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGuideRequest;
 use App\Http\Requests\UpdateGuideRequest;
+use App\Mail\RegistrationInvite;
 use App\Models\Company;
 use App\Models\Enums\RoleEnum;
 use App\Models\User;
+use App\Models\UserInvitation;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CompanyGuideController extends Controller
@@ -43,12 +47,14 @@ class CompanyGuideController extends Controller
 
         $data = $request->validated();
 
-        $company->users()->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
+        $invitation = UserInvitation::create([
+            'email' => $request->input('email'),
+            'token' => Str::uuid(),
+            'company_id' => $company->id,
             'role_id' => RoleEnum::GUIDE,
         ]);
+
+        Mail::to($request->input('email'))->send(new RegistrationInvite($invitation));
 
         return to_route('companies.guides.index', $company);
     }

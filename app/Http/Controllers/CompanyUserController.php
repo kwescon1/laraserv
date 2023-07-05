@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Mail\RegistrationInvite;
 use App\Models\Company;
 use App\Models\Enums\RoleEnum;
 use App\Models\User;
+use App\Models\UserInvitation;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CompanyUserController extends Controller
@@ -32,12 +36,14 @@ class CompanyUserController extends Controller
     {
         $this->authorize('create', $company);
 
-        $company->users()->create([
-            'name' => $request->input('name'),
+        $invitation = UserInvitation::create([
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'token' => Str::uuid(),
+            'company_id' => $company->id,
             'role_id' => RoleEnum::COMPANY_OWNER,
         ]);
+
+        Mail::to($request->input('email'))->send(new RegistrationInvite($invitation));
 
         return to_route('companies.users.index', $company);
     }
