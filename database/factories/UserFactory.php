@@ -51,4 +51,11 @@ class UserFactory extends Factory
             'role_id' => RoleEnum::COMPANY_OWNER,
         ]);
     }
+
+    public function guide(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_id' => RoleEnum::GUIDE,
+        ]);
+    }
 }
