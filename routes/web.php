@@ -18,6 +18,8 @@ Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
 
 Route::get('/activities/{activity}', [App\Http\Controllers\ActivityController::class, 'show'])->name('activity.show');
 
+Route::post('/activities/{activity}/register', [App\Http\Controllers\ActivityRegisterController::class, 'store'])->name('activities.register');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -28,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies.guides', App\Http\Controllers\CompanyGuideController::class)->except('show');
 
     Route::resource('companies.activities', App\Http\Controllers\CompanyActivityController::class);
+
+    Route::get('/activities', [App\Http\Controllers\MyActivityController::class, 'show'])->name('my-activity.show');
 });
 
 require __DIR__.'/auth.php';
