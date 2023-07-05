@@ -85,6 +85,7 @@ class CompanyActivityTest extends TestCase
         ]);
 
         Storage::disk('activities')->assertExists($file->hashName());
+
         Storage::disk('activities')->assertExists('thumbs/'.$file->hashName());
     }
 
