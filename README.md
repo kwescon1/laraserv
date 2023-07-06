@@ -11,5 +11,3 @@ Laraserv is a scalable reservation system built with Laravel, designed to effici
 -   **Scalability:** Built with Laravel, the application is designed to handle increased load and scale effectively.
 -   **Extensibility:** Add new functionalities and modules to suit your specific needs.
 -   **User-Friendly Interface:** Intuitive and easy-to-use interface for seamless navigation and efficient management.
-
--   **All the above features are being built one at a time**
