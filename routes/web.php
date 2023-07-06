@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/activities', [App\Http\Controllers\MyActivityController::class, 'show'])->name('my-activity.show');
     Route::get('/guides/activities', [App\Http\Controllers\GuideActivityController::class, 'show'])->name('guide-activity.show');
+    Route::get('/guides/activities/{activity}/pdf', [App\Http\Controllers\GuideActivityController::class, 'export'])->name('guide-activity.export');
     Route::delete('/activities/{activity}', [App\Http\Controllers\MyActivityController::class, 'destroy'])->name('my-activity.destroy');
 });
 
